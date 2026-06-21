@@ -10,7 +10,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "6.0",
+    "types": ["node"]
   },
   "include": ["**/*.ts", "infrastructure/http/books/tokens"],
   "exclude": ["node_modules", "dist"]
