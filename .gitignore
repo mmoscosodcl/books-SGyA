@@ -48,3 +48,19 @@ Thumbs.db
 **/tmp/
 **/temp/
 **/*.tmp
+
+# Frontend (Vite/React)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+frontend/*.local
+
+# Optional editor/cache noise inside frontend
+frontend/.DS_Store
+frontend/.eslintcache
+frontend/.stylelintcache
+
