@@ -13,6 +13,6 @@
     "ignoreDeprecations": "6.0",
     "types": ["node"]
   },
-  "include": ["**/*.ts", "infrastructure/http/books/tokens"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

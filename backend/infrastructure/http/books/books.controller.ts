@@ -11,9 +11,10 @@ import {
   Put,
   UseGuards
 } from '@nestjs/common';
-import { Book } from '../../../domain/models/book';
 import { BookService } from '../../../domain/services/book.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -33,7 +34,7 @@ export class BooksController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() body: Book) {
+  async create(@Body() body: CreateBookDto) {
     try {
       return await this.bookService.create(body);
     } catch (error) {
@@ -43,7 +44,7 @@ export class BooksController {
 
   @Put(':isbn13')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('isbn13') isbn13: string, @Body() body: Partial<Book>) {
+  async update(@Param('isbn13') isbn13: string, @Body() body: UpdateBookDto) {
     try {
       return await this.bookService.update(isbn13, body);
     } catch (error) {
