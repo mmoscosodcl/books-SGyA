@@ -112,3 +112,76 @@ echo
 # --------------------------------------------------
 curl -i -X DELETE "$BASE_URL/978-0451524935"
 echo
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA
+
+curl -i -X POST http://localhost:3000/api/books \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA" \
+  -d '{
+    "titulo": "Clean Code",
+    "autor": "Robert C. Martin",
+    "isbn13": "978-0132350884",
+    "categoria": "Software",
+    "formato": "Papel",
+    "precio": 18.5,
+    "stock": 10
+  }'
+
+
+  curl -i -X POST http://localhost:3000/api/books \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA" \
+  -d '{
+    "titulo": "Ebook Test",
+    "autor": "Author Demo",
+    "isbn13": "978-9999999999",
+    "categoria": "Tech",
+    "formato": "Digital",
+    "precio": 40,
+    "stock": 1
+  }'
+
+
+
+  curl -i -X PUT http://localhost:3000/api/books/978-0134494166 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA" \
+  -d '{
+    "precio": 19.9,
+    "stock": 2
+  }'
+
+
+
+  curl -i -X PUT http://localhost:3000/api/books/978-0134494166 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA" \
+  -d '{
+    "discontinued": true
+  }'
+
+
+  curl -i -X DELETE http://localhost:3000/api/books/978-0134494166 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXJfMTc4MTk4NzY0MDM1MF92MDVhZWc4MXAiLCJlbWFpbCI6Im1hbnVlbEBnbWFpbC5jb20iLCJpYXQiOjE3ODE5ODc2NzIsImV4cCI6MTc4MjA3NDA3Mn0.WqUo-3p7wcouFQFyg1B5N76WpGdOMzKXAIrV7MfapqA"
+
+
+# Testing
+# 1) Check env values
+echo "$BASE_URL"
+echo "$TOKEN"
+
+# 2) Login and capture a fresh token
+LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@libreria.com","password":"password123"}')
+
+echo "$LOGIN_RESPONSE"
+
+# 3) Extract token (no jq needed)
+TOKEN=$(echo "$LOGIN_RESPONSE" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+echo "$TOKEN"
+
+# 4) Call protected endpoint
+curl -i "$BASE_URL/auth/analytics" \
+  -H "Authorization: Bearer $TOKEN"

@@ -14,6 +14,7 @@ import { RegisterDto } from './register.dto';
 import { LoginDto } from './login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthenticateUserUseCase } from '../../../application/use-cases/authenticate-user.use-case';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {

@@ -15,8 +15,10 @@ import { BookService } from '../../../domain/services/book.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('books')
+@ApiTags('books')
 export class BooksController {
   constructor(private readonly bookService: BookService) {}
 
@@ -33,6 +35,7 @@ export class BooksController {
   }
 
   @Post()
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async create(@Body() body: CreateBookDto) {
     try {
@@ -43,6 +46,7 @@ export class BooksController {
   }
 
   @Put(':isbn13')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async update(@Param('isbn13') isbn13: string, @Body() body: UpdateBookDto) {
     try {
@@ -53,6 +57,7 @@ export class BooksController {
   }
 
   @Delete(':isbn13')
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('isbn13') isbn13: string) {

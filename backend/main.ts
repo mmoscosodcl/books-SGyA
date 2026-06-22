@@ -24,14 +24,21 @@ async function bootstrap() {
     .setTitle('Libreria SGyA API')
     .setDescription('API documentation')
     .setVersion('1.0.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+        name: 'Authorization',
+      },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-  await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}/api/docs`);
+  await app.listen(process.env.PORT ? Number(process.env.PORT) : 3000);
 }
 bootstrap();
