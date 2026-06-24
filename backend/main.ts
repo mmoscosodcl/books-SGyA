@@ -7,6 +7,19 @@ import { GlobalExceptionFilter } from './infrastructure/http/common/filters/glob
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  //CORS
+
+  console.log('Enable cors');
+
+
+  
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    credential: true,
+    methods: ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
@@ -39,6 +52,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 3000);
+  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  await app.listen(port);
+  console.log(`Application is running on: http://localhost:${port}/api/docs`);
 }
 bootstrap();
