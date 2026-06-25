@@ -1,13 +1,20 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { apiClient } from '../../api/client';
 import { API_ENDPOINTS } from '../../api/config';
 import type { Book } from '../../types';
 import { addNotification } from './notificationsSlice';
 
+export interface BookFilters {
+  author: string;
+  category: string;
+  minPrice: string;
+  maxPrice: string;
+}
 
 interface BooksState {
   items: Book[];
   selectedBook: Book | null;
+  filters: BookFilters,
   isLoading: boolean;
   error: string | null;
 }
@@ -15,6 +22,12 @@ interface BooksState {
 const initialState: BooksState = {
   items: [],
   selectedBook: null,
+  filters: {
+    author: '',
+    category: '',
+    minPrice: '',
+    maxPrice: '',
+  },
   isLoading: false,
   error: null,
 };
@@ -106,7 +119,17 @@ export const deleteBook = createAsyncThunk(
 const booksSlice = createSlice({
   name: 'books',
   initialState,
-  reducers: {},
+  reducers: {
+    setFilters(state, action: PayloadAction<Partial<BookFilters>>) {
+      state.filters = {
+        ...state.filters,
+        ...action.payload,
+      };
+    },
+    clearFilters(state) {
+      state.filters = initialState.filters;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchBooks.pending, (state) => {
       state.isLoading = true;
@@ -148,4 +171,5 @@ const booksSlice = createSlice({
   },
 });
 
+export const { setFilters, clearFilters} = booksSlice.actions;
 export default booksSlice.reducer;
