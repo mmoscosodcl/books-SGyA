@@ -14,7 +14,7 @@ export function BookEditPage() {
     titulo: '',
     autor: '',
     categoria: '',
-    formato: 'Papel' as 'Papel' | 'Digital' | 'Audiobook',
+    formato: 'Papel' as 'Papel' | 'Digital',
     precio: 1,
     stock: 1,
     discontinued: false,
@@ -68,7 +68,6 @@ export function BookEditPage() {
         <select className="w-full border p-2 rounded" value={form.formato} onChange={(e) => setForm((p) => ({ ...p, formato: e.target.value as any }))}>
           <option value="Papel">Papel</option>
           <option value="Digital">Digital</option>
-          <option value="Audiobook">Audiobook</option>
         </select>
         <input type="number" className="w-full border p-2 rounded" value={form.precio} onChange={(e) => setForm((p) => ({ ...p, precio: Number(e.target.value) }))} />
 

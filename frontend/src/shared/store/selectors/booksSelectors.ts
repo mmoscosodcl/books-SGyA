@@ -1,6 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
-import type { BookFilters } from '../slices/booksSlice';
 
 const selectBooksState = (state: RootState) => state.books;
 

@@ -6,14 +6,23 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: libreria-backend
-    working_dir: /app
     ports:
       - "3000:3000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    command: npm run start:dev
     environment:
-      - NODE_ENV=development
-      - JWT_SECRET=your-secret-key-change-in-production
-      - JWT_EXPIRES_IN=24h
+      PORT: 3000
+      NODE_ENV: production
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: libreria-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+networks:
+  app-net:
+    driver: bridge
+    internal: true

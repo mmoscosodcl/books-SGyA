@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import type { StringValue } from 'ms';
 
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
@@ -23,7 +24,7 @@ const BOOK_REPOSITORY = Symbol('BOOK_REPOSITORY');
     PassportModule,
     JwtModule.register({
       secret: jwtConfig.secret,
-      signOptions: { expiresIn: jwtConfig.expiresIn },
+      signOptions: { expiresIn: jwtConfig.expiresIn as StringValue },
     }),
   ],
   controllers: [AuthController],
