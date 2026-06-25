@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../hooks';
+import { ToastContainer } from './ToastContainer';
 
 const commonLinks = [
   { to: '/', label: 'Home' },
@@ -33,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-xl font-bold text-blue-600 tracking-tight">
-            Librería SGyA
+            BookSGyA
           </Link>
 
           <nav>
@@ -64,9 +65,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-10">{children}</main>
+      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-10">
+        {children}
+      </main>
 
       <footer className="bg-gray-800 text-gray-400 text-center text-sm py-4">&copy; 2026</footer>
+      <ToastContainer />
     </div>
   );
 }

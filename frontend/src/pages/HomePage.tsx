@@ -17,16 +17,13 @@ export function HomePage() {
     <Layout>
       <div className="space-y-12">
         <div className="text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">Welcome to Librería SGyA</h1>
-          <p className="text-xl text-gray-600">
-            A modern library management system built with React and TypeScript.
-          </p>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">BookSGyA</h1>
         </div>
 
         {/* Books Catalog */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-3xl font-bold text-gray-900">📚 Our Catalog</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Catalogo</h2>
             {isAuthenticated && (
               <Link
                 to="/books/manage"
@@ -70,6 +67,7 @@ export function HomePage() {
                     >
                       {book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}
                     </span>
+
                   </div>
                 </div>
               ))}

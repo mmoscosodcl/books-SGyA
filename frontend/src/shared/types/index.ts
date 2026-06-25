@@ -18,3 +18,12 @@ export interface AuthResponse {
   access_token: string;
   user: User;
 }
+
+export interface AnalyticsResponse {
+  totalBooks: number;
+  booksByFormat: Record<string, number>;
+  booksByStatus: Record<string, number>;
+  averagePrice: number;
+  totalStock: number;
+}
+

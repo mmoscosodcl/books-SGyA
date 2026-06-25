@@ -1,117 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Layout } from '../../../shared/components/Layout';
 import { useAppDispatch, useAppSelector } from '../../../shared/hooks';
-import { fetchBooks, deleteBook } from '../../../shared/store/slices/booksSlice';
-import type { Book } from '../../../shared/types';
+import { deleteBook, fetchBooks, updateBookStock } from '../../../shared/store/slices/booksSlice';
 
 export function BookManagementPage() {
   const dispatch = useAppDispatch();
-  const { items, isLoading, error } = useAppSelector((state) => state.books);
-  const [editingIsbn, setEditingIsbn] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const { items, isLoading, error } = useAppSelector((s) => s.books);
 
   useEffect(() => {
     dispatch(fetchBooks());
   }, [dispatch]);
 
-  const handleDelete = async (isbn13: string) => {
-    if (window.confirm(`Are you sure you want to delete this book?`)) {
-      await dispatch(deleteBook(isbn13));
-      setDeleteConfirm(null);
-    }
-  };
-
-  const handleEdit = (isbn13: string) => {
-    setEditingIsbn(editingIsbn === isbn13 ? null : isbn13);
-  };
-
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Manage Books</h1>
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">
-            + Add Book
-          </button>
+          <h1 className="text-3xl font-bold">Manage Books</h1>
+          <Link to="/books/create" className="bg-green-600 text-white px-4 py-2 rounded">+ Add book</Link>
         </div>
 
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded">
-            {error}
-          </div>
-        )}
+        {error && <div className="p-3 rounded bg-red-50 text-red-700">{error}</div>}
+        {isLoading ? <p>Loading...</p> : null}
 
-        {isLoading ? (
-          <p className="text-gray-600 text-center py-8">Loading books...</p>
-        ) : items.length === 0 ? (
-          <p className="text-gray-600 text-center py-8">No books available.</p>
-        ) : (
-          <div className="overflow-x-auto bg-white rounded-lg shadow">
-            <table className="w-full">
-              <thead className="bg-gray-100 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Title
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Author
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    ISBN13
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Stock
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {items.map((book) => (
-                  <tr key={book.isbn13} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">{book.titulo}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{book.autor}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 font-mono">
-                      {book.isbn13}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-blue-600">
-                      ${book.precio.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          book.stock > 0
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {book.stock}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm space-x-2 flex">
-                      <button
-                        onClick={() => handleEdit(book.isbn13)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(book.isbn13)}
-                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {items.map((b) => (
+            <div key={b.isbn13} className="bg-white border rounded p-4 space-y-2">
+              <h2 className="font-semibold">{b.titulo}</h2>
+              <p className="text-sm text-gray-500">{b.autor}</p>
+              <p className="text-sm">Stock: <span className="font-semibold">{b.stock}</span></p>
+
+              <div className="flex gap-2">
+                <button onClick={() => dispatch(updateBookStock({ isbn13: b.isbn13, stock: Math.max(0, b.stock - 1) }))}
+                  className="px-2 py-1 border rounded">-1 stock</button>
+                <button onClick={() => dispatch(updateBookStock({ isbn13: b.isbn13, stock: b.stock + 1 }))}
+                  className="px-2 py-1 border rounded">+1 stock</button>
+              </div>
+
+              <div className="flex gap-2">
+                <Link to={`/books/${b.isbn13}`} className="px-3 py-1 bg-gray-600 text-white rounded">View</Link>
+                <Link to={`/books/${b.isbn13}/edit`} className="px-3 py-1 bg-blue-600 text-white rounded">Edit</Link>
+                <button onClick={() => dispatch(deleteBook(b.isbn13))} className="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </Layout>
   );
