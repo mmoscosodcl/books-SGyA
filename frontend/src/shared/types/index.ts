@@ -3,7 +3,7 @@ export interface Book {
   titulo: string;
   autor: string;
   categoria: string;
-  formato: 'Papel' | 'Digital' | 'Audiobook';
+  formato: 'Papel' | 'Digital';
   precio: number;
   stock: number;
   discontinued?: boolean;
@@ -25,5 +25,10 @@ export interface AnalyticsResponse {
   booksByStatus: Record<string, number>;
   averagePrice: number;
   totalStock: number;
+
+  inventoryValue: number;
+  booksByCategory: Record<string, number>;
+  stockByFormat: Record<string, number>; // Papel | Digital
+  worksByAgeBins: Record<string, number>;
 }
 

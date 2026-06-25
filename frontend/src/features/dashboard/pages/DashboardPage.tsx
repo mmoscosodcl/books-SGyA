@@ -3,12 +3,27 @@ import { Layout } from '../../../shared/components/Layout';
 import { useAppDispatch, useAppSelector } from '../../../shared/hooks';
 import { fetchAnalytics } from '../../../shared/store/slices/dashboardSlice';
 import { selectDashboardCards, selectDashboardCharts } from '../../../shared/store/selectors/dashboardSelectors';
+import { DonutChart } from '../charts/DonutChart';
+import { ClusteredBarChart } from '../charts/ClusteredBarChart';
+import { HistogramChart } from '../charts/HistogramChart';
+import {
+  selectImpactKpis,
+  selectCategoryDonut,
+  selectFormatVsStock,
+  selectFormatSeriesOrder,
+  selectWorksByAgeBins,
+} from '../../../shared/store/selectors/dashboardViewSelectors';
 
 export function DashboardPage() {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.dashboard);
   const cards = useAppSelector(selectDashboardCards);
   const charts = useAppSelector(selectDashboardCharts);
+  const kpis = useAppSelector(selectImpactKpis);
+  const categoryDonut = useAppSelector(selectCategoryDonut);
+  const formatVsStock = useAppSelector(selectFormatVsStock);
+  const formatSeriesOrder = useAppSelector(selectFormatSeriesOrder);
+  const worksByAgeBins = useAppSelector(selectWorksByAgeBins);
 
   useEffect(() => {
     dispatch(fetchAnalytics());
@@ -37,28 +52,30 @@ export function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-lg border p-4">
-            <h2 className="font-semibold mb-3">Books by Format</h2>
-            <ul className="space-y-2">
-              {charts.formats.map((item) => (
-                <li key={item.label} className="flex justify-between">
-                  <span>{item.label}</span>
-                  <span className="font-semibold">{item.value}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-sm text-gray-500">Total Financial Value of Inventory</p>
+            <p className="text-2xl font-bold">${kpis.inventoryValue.toFixed(2)}</p>
           </div>
-
           <div className="bg-white rounded-lg border p-4">
-            <h2 className="font-semibold mb-3">Books by Status</h2>
-            <ul className="space-y-2">
-              {charts.statuses.map((item) => (
-                <li key={item.label} className="flex justify-between">
-                  <span>{item.label}</span>
-                  <span className="font-semibold">{item.value}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-sm text-gray-500">Stock Alert Index</p>
+            <p className="text-2xl font-bold">{kpis.stockAlertIndex.toFixed(1)}%</p>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="bg-white rounded-lg border p-2">
+            <DonutChart title="Catalog Distribution by Category" data={categoryDonut} />
+          </div>
+          <div className="bg-white rounded-lg border p-2">
+            <ClusteredBarChart
+               title="Formato vs Stock actual (Papel vs Digital)"
+              data={formatVsStock}
+              seriesOrder={formatSeriesOrder}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border p-2">
+          <HistogramChart title="Distribution of Works by Age" bins={worksByAgeBins} />
         </div>
       </div>
     </Layout>
