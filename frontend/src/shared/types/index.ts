@@ -7,6 +7,9 @@ export interface Book {
   precio: number;
   stock: number;
   discontinued?: boolean;
+  publicationDate: string;
+  bindingType?: 'Tapa Dura' | 'Tapa Blanda';
+  status?: 'Disponible' | 'Bajo Stock' | 'Agotado' | 'Descontinuado';
 }
 
 export interface User {
@@ -28,7 +31,7 @@ export interface AnalyticsResponse {
 
   inventoryValue: number;
   booksByCategory: Record<string, number>;
-  stockByFormat: Record<string, number>; // Papel | Digital
   worksByAgeBins: Record<string, number>;
+  stockByBindingType: Record<string, number>; 
 }
 

@@ -11,19 +11,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const isHttp = exception instanceof HttpException;
     const status = isHttp ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const payload = isHttp ? exception.getResponse() : null;
+    const payloadObj = payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : null;
+    const payloadMessage = payloadObj?.message;
 
     const detail =
       typeof payload === 'string'
         ? payload
-        : (payload as any)?.message
-          ? Array.isArray((payload as any).message)
+        : payloadMessage
+          ? Array.isArray(payloadMessage)
             ? 'Validation failed'
-            : (payload as any).message
+            : String(payloadMessage)
           : exception instanceof Error
             ? exception.message
             : 'Unexpected error';
 
-    const errors = Array.isArray((payload as any)?.message) ? (payload as any).message : undefined;
+    const errors = Array.isArray(payloadMessage) ? (payloadMessage as unknown[]) : undefined;
 
     response
       .status(status)

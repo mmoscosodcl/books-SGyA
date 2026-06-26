@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { apiClient } from '../../api/client';
+import { apiClient, getErrorMessage } from '../../api/client';
 import { API_ENDPOINTS } from '../../api/config';
 import type { AnalyticsResponse } from '../../types';
 import { createBook, deleteBook, updateBook, updateBookStock } from './booksSlice';
@@ -26,8 +26,8 @@ export const fetchAnalytics = createAsyncThunk(
     try {
       const response = await apiClient.get<AnalyticsResponse>(API_ENDPOINTS.AUTH_ANALYTICS);
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error?.response?.data?.detail ?? 'Failed to fetch analytics');
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, 'Failed to fetch analytics'));
     }
   },
 );

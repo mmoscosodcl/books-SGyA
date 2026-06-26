@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min,IsDateString } from 'class-validator';
 import { BOOK_FORMAT } from '../../../../domain/models/book';
 import { IsIsbn13 } from '../../common/validators/isbn13.validator';
 
@@ -38,4 +38,12 @@ export class CreateBookDto {
   @Type(() => Boolean)
   @IsBoolean()
   discontinued?: boolean;
+
+  @IsNotEmpty()
+  @IsDateString()
+  publicationDate!: string;
+
+  @IsOptional()
+  @IsIn(['Tapa Dura', 'Tapa Blanda'])
+  bindingType?: 'Tapa Dura' | 'Tapa Blanda';
 }

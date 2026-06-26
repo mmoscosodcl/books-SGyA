@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IBookRepository } from '../../domain/repositories/ibookrepository';
 import { calculateBookStatus } from '../../domain/services/book-rules';
+import { Book } from '../../domain/models/book';
 
 export interface AnalyticsMetrics {
     totalBooks: number;
@@ -12,8 +13,9 @@ export interface AnalyticsMetrics {
     // NEW
     inventoryValue: number;                 // sum(precio * stock)
     booksByCategory: { [key: string]: number };
-    stockByFormat: { [key: string]: number }; // Papel/Digital stock
+    stockByBindingType: { [key: string]: number }; 
     worksByAgeBins: { [key: string]: number };
+
 }
 
 @Injectable()
@@ -39,7 +41,7 @@ export class GetAnalyticsMetricsUseCase {
                 totalStock: 0,
                 inventoryValue: 0,
                 booksByCategory: {},
-                stockByFormat: {},
+                stockByBindingType: {},
                 worksByAgeBins: {},
             };
         }
@@ -48,6 +50,7 @@ export class GetAnalyticsMetricsUseCase {
         const booksByStatus: { [key: string]: number } = {};
         const booksByCategory: { [key: string]: number } = {};
         const stockByFormat: { [key: string]: number } = {};
+        const stockByBindingType: { [key: string]: number } = { 'Tapa Dura': 0, 'Tapa Blanda': 0 };
         const worksByAgeBins: { [key: string]: number } = {};
 
         let totalPrice = 0;
@@ -56,7 +59,7 @@ export class GetAnalyticsMetricsUseCase {
 
         const currentYear = new Date().getFullYear();
 
-        books.forEach((book: any) => {
+        books.forEach((book: Book) => {
             // Existing metrics
             booksByFormat[book.formato] = (booksByFormat[book.formato] || 0) + 1;
             const status = calculateBookStatus(book);
@@ -70,18 +73,12 @@ export class GetAnalyticsMetricsUseCase {
             const category = book.categoria ?? 'Sin categoría';
             booksByCategory[category] = (booksByCategory[category] || 0) + 1;
 
-            stockByFormat[book.formato] = (stockByFormat[book.formato] || 0) + book.stock;
+            if (book.formato === 'Papel' && book.bindingType) {
+                stockByBindingType[book.bindingType] = (stockByBindingType[book.bindingType] || 0) + book.stock;
+            }
 
             // Works by age bins (requires publication year/date in model)
-            const publicationYear =
-                typeof book.publicationYear === 'number'
-                    ? book.publicationYear
-                    : typeof book.anioPublicacion === 'number'
-                    ? book.anioPublicacion
-                    : book.publishedAt
-                    ? new Date(book.publishedAt).getFullYear()
-                    : null;
-
+            const publicationYear = book.publicationDate ? new Date(book.publicationDate).getFullYear() : null;
             if (!publicationYear || Number.isNaN(publicationYear)) {
                 worksByAgeBins['Desconocida'] = (worksByAgeBins['Desconocida'] || 0) + 1;
             } else {
@@ -101,7 +98,7 @@ export class GetAnalyticsMetricsUseCase {
             // NEW
             inventoryValue,
             booksByCategory,
-            stockByFormat,
+            stockByBindingType,
             worksByAgeBins,
         };
     }

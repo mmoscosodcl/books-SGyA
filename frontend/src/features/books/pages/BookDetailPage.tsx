@@ -41,6 +41,10 @@ export function BookDetailPage() {
               <span className="font-semibold">Discontinued:</span>{' '}
               {selectedBook.discontinued ? 'Yes' : 'No'}
             </p>
+            <p><span className="font-semibold">Publication Date:</span> {selectedBook.publicationDate}</p>
+            {selectedBook.bindingType && (
+                <p><span className="font-semibold">Binding Type:</span> {selectedBook.bindingType}</p>
+            )}
           </div>
         )}
       </div>

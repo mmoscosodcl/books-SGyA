@@ -1,7 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '../index';
+import type { Book } from '../../types';
 
 const selectBooksState = (state: RootState) => state.books;
+
+export function getBookStatus(book: Book): 'Disponible' | 'Bajo Stock' | 'Agotado' | 'Descontinuado' {
+  if (book.discontinued) return 'Descontinuado';
+  if (book.formato === 'Digital') return 'Disponible';
+  if (book.stock <= 0) return 'Agotado';
+  if (book.stock <= 5) return 'Bajo Stock';
+  return 'Disponible';
+}
 
 export const selectBooksItems = createSelector(
   selectBooksState,
@@ -55,7 +64,7 @@ export const selectBooksTableRows = createSelector(
       formato: book.formato,
       precio: book.precio,
       stock: book.stock,
-      status: book.stock > 0 ? 'Disponible' : 'Sin stock',
+      status: getBookStatus(book),
     })),
 );
 

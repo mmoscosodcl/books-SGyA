@@ -39,7 +39,7 @@ export class AuthController {
 
   @Get('analytics')
   @UseGuards(JwtAuthGuard)
-  async getAnalytics(@Request() _req: any) {
+  async getAnalytics(@Request() _req: unknown) {
     return this.analyticsUseCase.execute();
   }
 }

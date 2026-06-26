@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { Layout } from '../../../shared/components/Layout';
 import { useAppDispatch, useAppSelector } from '../../../shared/hooks';
 import { fetchAnalytics } from '../../../shared/store/slices/dashboardSlice';
+import { fetchBooks } from '../../../shared/store/slices/booksSlice';
+import { BookFilters } from '../../books/components/BookFilters';
 import { selectDashboardCards } from '../../../shared/store/selectors/dashboardSelectors';
 import { DonutChart } from '../charts/DonutChart';
 import { ClusteredBarChart } from '../charts/ClusteredBarChart';
@@ -26,12 +28,14 @@ export function DashboardPage() {
 
   useEffect(() => {
     dispatch(fetchAnalytics());
+    dispatch(fetchBooks());
   }, [dispatch]);
 
   return (
     <Layout>
       <div className="space-y-6">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+         <BookFilters />
 
         {isLoading && <p className="text-gray-600">Loading analytics...</p>}
         {error && (
@@ -56,7 +60,7 @@ export function DashboardPage() {
           </div>
           <div className="bg-white rounded-lg border p-4">
             <p className="text-sm text-gray-500">Stock Alert Index</p>
-            <p className="text-2xl font-bold">{kpis.stockAlertIndex.toFixed(1)}%</p>
+            <p className="text-2xl font-bold">{kpis.stockAlertIndex}</p>
           </div>
         </div>
 
@@ -66,7 +70,7 @@ export function DashboardPage() {
           </div>
           <div className="bg-white rounded-lg border p-2">
             <ClusteredBarChart
-               title="Formato vs Stock actual (Papel vs Digital)"
+               title="Encuadernación vs Stock actual (Tapa Dura vs Tapa Blanda)"
               data={formatVsStock}
               seriesOrder={formatSeriesOrder}
             />

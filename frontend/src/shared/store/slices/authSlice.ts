@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { apiClient } from '../../api/client';
+import { apiClient, getErrorMessage } from '../../api/client';
 import { API_ENDPOINTS } from '../../api/config';
 import type { User } from '../../types';
 
@@ -42,8 +42,8 @@ export const loginUser = createAsyncThunk(
       if (data.user) localStorage.setItem(USER_KEY, JSON.stringify(data.user));
 
       return data;
-    } catch (err: any) {
-      return rejectWithValue(err?.response?.data?.detail ?? 'Login failed');
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, 'Failed to fetch books'));
     }
   },
 );
@@ -58,8 +58,8 @@ export const registerUser = createAsyncThunk(
         payload,
       );
       return data;
-    } catch (err: any) {
-      return rejectWithValue(err?.response?.data?.detail ?? 'Registration failed');
+    } catch (error) {
+      rejectWithValue(getErrorMessage(error, 'Registration failed'));
     }
   },
 );

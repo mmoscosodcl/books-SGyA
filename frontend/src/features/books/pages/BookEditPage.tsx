@@ -18,6 +18,8 @@ export function BookEditPage() {
     precio: 1,
     stock: 1,
     discontinued: false,
+    publicationDate: '',
+    bindingType: '' as 'Tapa Dura' | 'Tapa Blanda' | '',
   });
 
   useEffect(() => {
@@ -34,13 +36,19 @@ export function BookEditPage() {
         precio: selectedBook.precio,
         stock: selectedBook.stock,
         discontinued: !!selectedBook.discontinued,
+        publicationDate: selectedBook.publicationDate || '',
+        bindingType: selectedBook.bindingType || '',
       });
     }
   }, [selectedBook]);
 
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await dispatch(updateBook({ isbn13, data: form }));
+    const data = {
+      ...form,
+      bindingType: form.formato === 'Papel' ? (form.bindingType || undefined) : undefined,
+    };
+    const result = await dispatch(updateBook({ isbn13, data }));
     if (result.meta.requestStatus === 'fulfilled') navigate('/books/manage');
   };
 
@@ -65,10 +73,34 @@ export function BookEditPage() {
         <input className="w-full border p-2 rounded" value={form.titulo} onChange={(e) => setForm((p) => ({ ...p, titulo: e.target.value }))} />
         <input className="w-full border p-2 rounded" value={form.autor} onChange={(e) => setForm((p) => ({ ...p, autor: e.target.value }))} />
         <input className="w-full border p-2 rounded" value={form.categoria} onChange={(e) => setForm((p) => ({ ...p, categoria: e.target.value }))} />
-        <select className="w-full border p-2 rounded" value={form.formato} onChange={(e) => setForm((p) => ({ ...p, formato: e.target.value as any }))}>
+
+
+        <select className="w-full border p-2 rounded" value={form.formato} onChange={(e) => setForm((p) => ({ ...p, formato: e.target.value as 'Papel' | 'Digital' }))}>
           <option value="Papel">Papel</option>
           <option value="Digital">Digital</option>
         </select>
+
+            {form.formato === 'Papel' && (
+              <select
+                className="w-full border p-2 rounded"
+                value={form.bindingType}
+                onChange={(e) => setForm((p) => ({ ...p, bindingType: e.target.value as 'Tapa Dura' | 'Tapa Blanda' }))}
+                required
+              >
+                <option value="">Select Binding Type...</option>
+                <option value="Tapa Dura">Tapa Dura</option>
+                <option value="Tapa Blanda">Tapa Blanda</option>
+              </select>
+            )}
+
+            <input
+              type="date"
+              className="w-full border p-2 rounded"
+              value={form.publicationDate}
+              onChange={(e) => setForm((p) => ({ ...p, publicationDate: e.target.value }))}
+              required
+            />
+
         <input type="number" className="w-full border p-2 rounded" value={form.precio} onChange={(e) => setForm((p) => ({ ...p, precio: Number(e.target.value) }))} />
 
         <div className="flex items-center gap-2">

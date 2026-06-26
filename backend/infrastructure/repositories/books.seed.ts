@@ -1,4 +1,4 @@
-import { Book, BOOK_FORMAT } from '../../domain/models/book';
+import { Book, BOOK_FORMAT } from '../../domain/models/book'; 
 
 export const seedBooks: Book[] = [
     // --- CATEGORÍA: PROGRAMACIÓN ---
@@ -10,6 +10,8 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.PAPEL,
         precio: 35.50,
         stock: 45,
+        publicationDate: '2017-09-20',
+        bindingType: 'Tapa Dura'
     },
     {
         titulo: 'The Pragmatic Programmer',
@@ -18,7 +20,9 @@ export const seedBooks: Book[] = [
         categoria: 'Programación',
         formato: BOOK_FORMAT.PAPEL,
         precio: 40.00,
-        stock: 3, // Ideal para probar el estado 'Bajo Stock'
+        stock: 3, 
+        publicationDate: '1999-10-30',
+        bindingType: 'Tapa Blanda'
     },
     {
         titulo: 'Domain-Driven Design',
@@ -26,8 +30,10 @@ export const seedBooks: Book[] = [
         isbn13: '978-0321125217',
         categoria: 'Programación',
         formato: BOOK_FORMAT.DIGITAL,
-        precio: 24.99, // Cumple regla: <= 25.00
-        stock: 9999,   // Cumple regla: stock forzado digital
+        precio: 24.99, 
+        stock: 9999,   
+        publicationDate: '2003-08-30'
+        // Digital: sin bindingType
     },
     {
         titulo: 'Patrones de Diseño (GoF)',
@@ -37,7 +43,9 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.PAPEL,
         precio: 55.00,
         stock: 2,
-        discontinued: true, // Cumple regla: inmutable, no editable
+        discontinued: true, 
+        publicationDate: '1994-10-31',
+        bindingType: 'Tapa Dura'
     },
 
     // --- CATEGORÍA: CIENCIA FICCIÓN ---
@@ -48,7 +56,9 @@ export const seedBooks: Book[] = [
         categoria: 'Ciencia Ficción',
         formato: BOOK_FORMAT.PAPEL,
         precio: 19.99,
-        stock: 0, // Ideal para probar el estado 'Agotado'
+        stock: 0, 
+        publicationDate: '1965-08-01',
+        bindingType: 'Tapa Blanda'
     },
     {
         titulo: '1984',
@@ -58,6 +68,7 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.DIGITAL,
         precio: 9.99,
         stock: 9999,
+        publicationDate: '1949-06-08'
     },
     {
         titulo: 'Guía del Autoestopista Galáctico',
@@ -68,6 +79,8 @@ export const seedBooks: Book[] = [
         precio: 15.00,
         stock: 0,
         discontinued: true,
+        publicationDate: '1979-10-12',
+        bindingType: 'Tapa Blanda'
     },
 
     // --- CATEGORÍA: FANTASÍA ---
@@ -79,6 +92,8 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.PAPEL,
         precio: 45.00,
         stock: 5,
+        publicationDate: '1954-07-29',
+        bindingType: 'Tapa Dura'
     },
     {
         titulo: 'Harry Potter y la Piedra Filosofal',
@@ -88,6 +103,7 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.DIGITAL,
         precio: 12.99,
         stock: 9999,
+        publicationDate: '1997-06-26'
     },
 
     // --- CATEGORÍA: NEGOCIOS / DESARROLLO PERSONAL ---
@@ -98,7 +114,9 @@ export const seedBooks: Book[] = [
         categoria: 'Negocios',
         formato: BOOK_FORMAT.PAPEL,
         precio: 22.00,
-        stock: 120, // Stock robusto para balancear el KPI de valor financiero
+        stock: 120, 
+        publicationDate: '2018-10-16',
+        bindingType: 'Tapa Dura'
     },
     {
         titulo: 'Thinking, Fast and Slow',
@@ -108,6 +126,8 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.PAPEL,
         precio: 20.00,
         stock: 35,
+        publicationDate: '2011-10-25',
+        bindingType: 'Tapa Blanda'
     },
     {
         titulo: 'Hábitos Ricos',
@@ -117,6 +137,7 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.DIGITAL,
         precio: 19.99,
         stock: 9999,
+        publicationDate: '2010-03-01'
     },
 
     // --- CATEGORÍA: HISTORIA / NO FICCIÓN ---
@@ -128,15 +149,18 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.DIGITAL,
         precio: 15.50,
         stock: 9999,
+        publicationDate: '2011-09-04'
     },
     {
-        titulo: 'Meditaciones',
+        titulo: 'Meditaciones (Edición Moderna)',
         autor: 'Marco Aurelio',
         isbn13: '978-0812968255',
         categoria: 'Historia',
         formato: BOOK_FORMAT.PAPEL,
         precio: 12.00,
         stock: 8,
+        publicationDate: '2006-05-02',
+        bindingType: 'Tapa Blanda'
     },
     {
         titulo: 'Armas, Gérmenes y Acero',
@@ -146,5 +170,7 @@ export const seedBooks: Book[] = [
         formato: BOOK_FORMAT.PAPEL,
         precio: 21.00,
         stock: 0,
+        publicationDate: '1997-03-01',
+        bindingType: 'Tapa Blanda'
     }
 ];

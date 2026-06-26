@@ -4,6 +4,7 @@ import { Layout } from '../../../shared/components/Layout';
 import { useAppDispatch, useAppSelector } from '../../../shared/hooks';
 import { deleteBook, fetchBooks, updateBookStock } from '../../../shared/store/slices/booksSlice';
 import { selectBooksTableRows } from '../../../shared/store/selectors/booksSelectors';
+import { BookFilters } from '../../books/components/BookFilters';
 
 export function BookManagementPage() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export function BookManagementPage() {
           </Link>
         </div>
 
+        <BookFilters />
         {error && <div className="p-3 rounded bg-red-50 text-red-700">{error}</div>}
         {isLoading ? <p>Loading...</p> : null}
 
@@ -39,6 +41,7 @@ export function BookManagementPage() {
                 <th className="px-4 py-3 text-left">Category</th>
                 <th className="px-4 py-3 text-left">Price</th>
                 <th className="px-4 py-3 text-left">Stock</th>
+                <th className="px-4 py-3 text-left">Status</th>
                 <th className="px-4 py-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -50,6 +53,7 @@ export function BookManagementPage() {
                   <td className="px-4 py-3">{b.categoria}</td>
                   <td className="px-4 py-3">${b.precio.toFixed(2)}</td>
                   <td className="px-4 py-3">{b.stock}</td>
+                  <td className="px-4 py-3">{b.status}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
                       <Link

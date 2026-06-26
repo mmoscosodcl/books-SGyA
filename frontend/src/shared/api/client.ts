@@ -23,4 +23,12 @@ export const createApiClient = (): AxiosInstance => {
   return client;
 };
 
+export function getErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { detail?: string } | undefined;
+    return data?.detail ?? fallback;
+  }
+  return fallback;
+}
+
 export const apiClient = createApiClient();

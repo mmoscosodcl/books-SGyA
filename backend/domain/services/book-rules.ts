@@ -17,11 +17,16 @@ export function normalizeBook(book: Book): Book {
         throw new Error('Invalid price: precio must be greater than 0.');
     }
 
+    if (book.formato === BOOK_FORMAT.PAPEL && !book.bindingType) {
+        throw new Error('Paper books must specify a bindingType (Tapa Dura or Tapa Blanda).');
+    }
+
     if (book.formato === BOOK_FORMAT.DIGITAL) {
         return {
             ...book,
             stock: DIGITAL_FIXED_STOCK,
             precio: Math.min(book.precio, DIGITAL_MAX_PRICE),
+            bindingType: undefined,
         };
     }
 
