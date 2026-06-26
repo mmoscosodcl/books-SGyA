@@ -1,73 +1,53 @@
-# React + TypeScript + Vite
+# Frontend - Librería SGyA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es el panel web interactivo para la gestión y analítica de la **Librería SGyA**. Está desarrollado en **React** y **Vite** usando **TypeScript**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Arquitectura y Diseño de UI
 
-## React Compiler
+* **Organización Feature-First**: El código se organiza de forma modular por características operativas y de negocio (`features/auth`, `features/books`, `features/dashboard`).
+* **Abstracción de Librerías de Terceros**: Las visualizaciones interactivas de **Plotly.js** se encuentran estrictamente encapsuladas dentro de componentes contenedores (`DonutChart.tsx`, `ClusteredBarChart.tsx`, `HistogramChart.tsx`), evitando acoplar el dashboard a la API externa del proveedor visual.
+* **Estilos**: Construido de manera ágil usando Tailwind CSS para lograr una interfaz moderna y adaptativa (responsive).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Estado, Rendimiento e Interactividad
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Manejo de Estado Global**: Uso estricto de **Redux Toolkit** (slices para `auth`, `books`, `dashboard` y `notifications`).
+* **Rendimiento Optimizado (Reselect)**: Se implementan selectores memorizados mediante `createSelector` para recalcular las métricas y datos de los gráficos de forma eficiente, evitando re-renderizados innecesarios.
+* **Estados Asíncronos**: Control estructurado de estados de carga (`isLoading`), éxito y errores (`error`) a través de `createAsyncThunk`.
+* **Sistema de Notificaciones**: Toast reactivos para informar sobre éxitos y fallas de llamadas API.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Autenticación y Seguridad
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* **Interceptor HTTP**: Configuración de un cliente centralizado Axios con interceptores para adjuntar automáticamente el JWT Bearer Token almacenado en las cabeceras de peticiones salientes hacia rutas privadas.
+* **Control del Ciclo de Vida del Token**: El token se gestiona globalmente en Redux (se borra del `localStorage` e inicializa el estado ante acciones de `Logout`).
+* **Rutas Protegidas**: Rutas privadas `/dashboard`, `/books/manage`, `/books/create` y `/books/:isbn13/edit` controladas por el componente, redirigiendo al inicio de sesión si el usuario no cuenta con una sesión válida.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Docker y Despliegue (Cumplido)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* **Dockerfile**: Estructurado con *multi-stage builds* (etapas `deps`, `build` y `prod` con servidor Nginx Alpine) para minimizar el tamaño de distribución de producción.
+
+---
+
+## Instalación y Uso Local
+
+1. Instalar dependencias:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. Crear un archivo `.env.development` (o `.env`):
+   ```env
+   VITE_API_URL=http://localhost:3000/api
+   ```
+3. Ejecutar servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+4. Navegador: Acceder a [http://localhost:5173](http://localhost:5173).
